@@ -1,3 +1,4 @@
+import 'package:english_words/english_words.dart' as prefix0;
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
 
@@ -9,6 +10,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Startup Name Generator',
+      theme: ThemeData(
+        primaryColor: Colors.green,
+      ),
       home: RandomWords(),
     );
   }
@@ -56,10 +60,47 @@ class RandomWordsState extends State<RandomWords> {
     );
   }
 
+  void _pushSaved() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) {
+          final Iterable<ListTile> tiles = _saved.map(
+            (WordPair pair) {
+              return ListTile(
+                title: Text(
+                  pair.asPascalCase,
+                  style: _biggerFont,
+                ),
+              );
+            }
+          );
+          final List<Widget> diveded = ListTile
+            .divideTiles(
+              context: context,
+              tiles: tiles,
+            )
+            .toList();
+          
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('Saved Suggestions'),
+            ),
+            body: ListView(children: diveded),
+          );
+        }
+      )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Startup Name Generator'),),
+      appBar: AppBar(
+        title: Text('Startup Name Generator'),
+        actions: <Widget>[
+          IconButton(icon: Icon(Icons.list), onPressed: _pushSaved),
+        ],
+      ),
       body: _buildSuggestions(),
     );
   }
